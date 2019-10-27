@@ -9,19 +9,41 @@ Bagian ini akan diisi dengan apa yang melatarbelakangi pembuatan template skrips
 Termasuk juga masalah-masalah yang akan dihadapi untuk membuatnya, termasuk kurangnya kemampuan penguasaan \LaTeX{} sehingga template ini dibuat dengan mengandalkan berbagai contoh yang tersebar di dunia maya, yang digabung-gabung menjadi satu jua.
 Bagian lain juga akan dilengkapi, untuk sementara diisi dengan lorem ipsum versi bahasa inggris.
 
-\dtext{5-10}
+\textit{Big data} selalu datang dan terkumpul secara terus menerus. Mengklasifikasikan data merupakan salah satu proses yang diperlukan untuk mendapatkan informasi dan prediksi dari data-data yang ada. Model klasifikasi data yang dilakukan harus diperbarui seiring dengan bertambahnya data agar tetap mendapatkan informasi dan prediksi yang diinginkan.
+
+Untuk mendapatkan hasil prediksi dengan akurasi yang tinggi, digunakan teknik yang namanya Ensemble Method. \textit{Ensemble method} merupakan teknik untuk meningkatkan akurasi pada teknik klasifikasi. Pada teknik ini, \textit{dataset training} akan dipecah secara acak, tiap bagian digunakan untuk membuat model klasifikasi. \textit{Dataset training} dipecah menggunakan teknik \textit{bagging}. \textit{Bagging} (\textit{bootstrap aggregating}) merupakan teknik untuk membagi-bagi dataset dengan menerapkan ‘\textit{sampling with replacement}’ yang dapat dimanfaatkan pada \textit{ensemble method}. Pada tahap prediksi, kasus baru akan diumpankan ke semua model. Hasil prediksi kelas akan ditentukan dari kelas dengan jumlah voting terbanyak.
+
+Perangkat lunak akan dibuat dengan bantuan \textit{Apache Spark}. \textit{Apache Spark} adalah teknologi komputasi \textit{cluster} yang dirancang untuk komputasi cepat yang berdasar pada \textit{Hadoop MapReduce}  dan model \textit{MapReduce}. Library klasifikasi paralel untuk klasifikasi \textit{big data} pada sistem tersebar \textit{Spark} sudah tersedia pada Spark Machine Learning Library (Spark MLLib). Perlu dikembangkan agar menangani pembuatan model klasifikasi secara inkremental.
+
+Pada skripsi ini, akan dibuat sebuah program yang mengklasifikasikan big data secara inkremental dengan menggunakan \textit{ensemble method classifier} dengan mengadopsi \textit{bagging}. Inkremental maksudnya adalah model klasifikasi data harus diperbarui seiring dengan bertambahnya data agar model tersebut dapat tetap valid, merepresentasikan \textit{big data} baru dan memiliki akurasi yang diharapkan.
 
 \section{Rumusan Masalah}
 \label{sec:rumusan}
 Bagian ini akan diisi dengan penajaman dari masalah-masalah yang sudah diidentifikasi di bagian sebelumnya. 
+Masalah-masalah yang ingin diselesaikan dalam skripsi ini adalah sebagai berikut.
+\begin{enumerate}
+\item Bagaimana cara mengimplementasikan \textit{ensemble method classifier} dengan \textit{bagging} dan voting ke dalam algoritma klasifikasi?
+\item Apa saja algoritma klasifikasi yang ada pada \textit{Spark}?
+\item Bagaimana cara algoritma klasifikasi yang ada pada Spark bekerja?
+\item Bagaimana \textit{ensemble method} bekerja?
+\item Bagaimana teknik \textit{bagging} bekerja?\\
+\item Bagaimana melakukan algoritma klasifikasi pada spark dengan bahasa scala?
+\end{enumerate}
 
-\dtext{6}
 
 \section{Tujuan}
 \label{sec:tujuan}
 Akan dipaparkan secara lebih terperinci dan tersturkur apa yang menjadi tujuan pembuatan template skripsi ini
+Tujuan dari pembuatan perangkat lunak adalah sebagai berikut.
+\begin{enumerate}
+\item Mengembangkan algoritma klasifikasi pada \textit{Spark} menjadi \textit{ensemble method classifier} dengan \textit{bagging}.
+\item Mempelajari jenis-jenis algoritma klasifikasi pada \textit{Spark}.
+\item Mempelajari bagaimana Spark bekerja.
+\item Mempelajari \textit{ensemble method}.
+\item Mempelajari teknik \textit{bagging}.
+\item Mempelajari bahasa Scala.
+\end{enumerate}
 
-\dtext{7}
 
 \section{Batasan Masalah}
 \label{sec:batasan}
@@ -41,4 +63,7 @@ Rencananya Bab 2 akan berisi petunjuk penggunaan template dan dasar-dasar \LaTeX
 Mungkin bab 3,4,5 dapt diisi oleh ketiga jurusan, misalnya peraturan dasar skripsi atau pedoman penulisan, tentu jika berkenan.
 Bab 6 akan diisi dengan kesimpulan, bahwa membuat template ini ternyata sungguh menghabiskan banyak waktu.
 
-\dtext{10}
+Bab 2 akan menjelaskan tentang Big Data, Spark, algoritma klasifikasi yang ada pada Spark MLLib, bahasa pemrograman Scala.
+Bab 3 akan berisi hasil dari eksplorasi di bab 2.
+Bab 4 akan berisi perancangan model algoritma klasifikasi yang menggunakan ensemble method.
+ 

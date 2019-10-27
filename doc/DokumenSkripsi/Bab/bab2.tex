@@ -2,157 +2,104 @@
 \chapter{Landasan Teori}
 \label{chap:teori}
 
-\section{Skripsi}
-\label{sec:skripsi} 
+\section{Apache Spark}
+\label{sec:spark} 
  
 Rencananya akan diisi dengan penjelasan umum mengenai buku skripsi.
 
-\dtext{11-12} 
+Apache spark adalah komputasi cluster cepat yang dirancang untuk komputasi cepat. Apache spark dibangun di atas Hadoop MapReduce dan meningkatkan model MapReduce agar dapat menggunakan lebih banyak jenis perhitungan secara efisien. Fitur utama spark adalah komputasi cluster di dalam memori yang meningkatkan kecepatan pemrosesan aplikasi. Spark dirancang untuk mencakup berbagai data yang besar dan berat seperti aplikasi batch, algoritma iteratif, query yang interaktif dan streaming.
 
-\section{\LaTeX}
-\label{sec:latex}
+\subsection{Fitur-fitur Apache Spark}
+Apache Spark digunakan dikarenakan banyaknya kelebihan-kelebihan yang dimilikinya. Kelebihan tersebut antara lain.
+\begin{enumerate}
+\item Kecepatan\\
+Spark membantu menjalankan aplikasi di cluster Hadoop, hingga 100 kali lebih cepat dalam memori, dan 10 kali lebih cepat saat dijalankan pada disk. Hal tersebut dapat terjadi dengan cara mengurangi jumlah operasi baca / tulis ke disk dan cara menguranginya adalah dengan menyimpan pemrosesan data di dalam memori.
+\item Kemampuan cache yang kuat.
+\item Dapat dipasang di berbagai platform misal Mesos, Hadoop via Yarn atau cluster manager milik spark sendiri.
+\item Menyediakan komputasi real-time.
+\item Mendukung banyak bahasa (Java, Scala, dan Python).
+\item Spark dapat menangani penambahan beban misalnya penambahan volume data atau jumlah pengguna tanpa penurunan kinerja yang berarti.
+\end{enumerate}
+
+\subsection{Komponen-komponen Spark}
+Komponen-komponen yang ada pada spark antara lain.
+\begin{enumerate}
+\item Apache Spark Core\\
+Spark Core adalah komponen yang mendasari semua platform spark dengan semua fungsi-fungsinya. Menyediakan komputasi dalam memory dan mereferensikan dataset-dataset di dalam sistem penyimpanan eksternal.
+\item Spark SQL \\
+Spark SQL adalah komponen diatas SparkCore yang menyediakan abstraksi data yang disebut SchemaRDD. SchemaRDD menyediakan bantuan untuk kueri-kueri data terstruktur dan data semi-terstruktur.
+\item Spark Streaming\\
+Spark Streaming memanfaatkan kemampuan penjadwalan cepat dari Spark Core untuk melakukan analisis streaming. Analisis streaming mengambil data dalam batch-batch kecil dan menjalankan transformasi RDD (Resilient Distributed Datasets) pada data di dalam batch-batch kecil tersebut.
+\item MLlib(Machine Learning Library)\\
+MLlib adalah framework machine learning terdistribusi diatas Spark dikarenakan arsitektur Spark yang berbasis memori terdistribusi. Spark MLLib menyediakan algoritma-algoritma yang dapat digunakan untuk analisis data seperti regresi, klasifikasi, dan lain-lain.
+\item GraphX\\
+GraphX adalah framework untuk pemrosesan grafik terdistribusi di atas spark. GraphX menyediakan API untuk membuat perhitungan grafik yang dapat memodelkan grafik yang ditentukan user.
+\item SparkR\\
+SparkR adalah package milik R yang menyediakan implementasi data frame terdistribusi. SparkR juga mendukung operasi seperti seleksi, filter, agregasi untuk dataset dataset yang ukurannya besar.
+
+\end{enumerate}
+
+\subsection{Resilient Distributed Dataset}
+RDD adalah bagian inti dari semua aplikasi Spark. Secara umum, RDD bersifat immutable.  Immutable artinya objek tersebut tidak dapat diubah setelah dibuat, akan tetapi dapat ditransformasi. RDD artinya adalah
+\begin{itemize}
+\item Resilient	: Toleran terhadap kesalahan dan mampu mengembalikan data yang gagal
+\item Distributed	: Data terdistribusi ke semua node-node dalam sebuah cluster
+\item Dataset		: Kumpulan partisi data dengan value
+\end{itemize}
+Jadi, dapat disimpulkan bahwa RDD adalah dataset yang tersebar ke semua node di dalam sebuah cluster dan data tersebut tahan/toleran terhadap kesalahan serta dapat mengembalikan data yang gagal.
+
+Cara kerja RDD adalah data di dalam RDD dibagi menjadi beberapa bagian berdasarkan suatu key. RRD sangat resilient (highly resilient) karena RDD dapat pulih dengan cepat dari kesalahan-kesalahan. Hal tersebut dapat terjadi karena potongan data yang sama direplikasi di beberapa node pelaksana (executor nodes). Jadi, jika satu node pelaksana gagal maka yang lain masih akan memproses data. Oleh karena itu, RDD memungkinkan untuk melakukan perhitungan fungsi terhadap dataset dengan sangat cepat dengan memanfaatkan beberapa node.
+
+Setiap dataset di RDD dibagi menjadi partisi yang logis, yang artinya dapat di komputasi/ dijalankan di node yang berbeda dalam sebuah cluster. Karena sifatnya ini, kita dapat melakukan transformasi atau aksi ke seluruh data secara paralel. Distribusinya dilakukan secara otomatis oleh Spark.
+
+Ada 2 cara membuat RDD, cara pertama adalah dengan memparalelkan koleksi data yang ada di dalam driver program dan cara yang kedua adalah dengan mereferensi dataset di luar storage system seperti shared file system, HDFS, HBase, dan lain-lain.
+
+RDD bisa melakukan 2 operasi sebagai berikut:
+\begin{itemize}
+\item Transformations (transformasi) : operasi yang dipakai untuk membuat RDD baru.
+\item Actions (aksi) : aksi dipakai di dalam RDD untuk memberitahukan Apache Spark untuk menggunakan komputasi dan memberikan hasilnya kembali ke driver.
+\end{itemize}
+
+\subsubsection{Transformasi RDD}
+RDD dapat melakukan berbagai macam operasi transformasi, berikut adalah operasi-operasi tranformasi yang dapat dilakukan oleh RDD.
+
+\subsubsection{Aksi RDD}
+RDD juga dapat melakukan berbagai operasi aksi. Berikut adalah operasi-operasi aksi yang dapat dilakukan oleh RDD.
+
+\subsection{Arsitektur Spark}
+Dalam spark, terdapat yang namanya master node dan juga worker node. Master node bertugas untuk memanajemen pembagian RDD dan juga pembagian tugas-tugas ke semua worker node yang ada. Master node memiliki sebuah driver program. Tugas dari driver program ini adalah untuk menjalankan aplikasi yang telah dibuat. Kode yang dibuat bertindak sebagai driver program atau jika menggunakan interactive shell, shell yang bertindak sebagai driver program. \\
+Di dalam driver program, hal pertama yang harus dilakukan adalah membuat Spark Context. Spark Context merupakan gerbang ke semua fungsi-fungsi milik spark. Semua fungsi yang akan dilakukan pada driver program akan melewati Spark Context. Driver program dan spark context bertugas menangani eksekusi pekerjaan di dalam sebuah cluster. Sebuah pekerjaan dibagi-bagi menjadi beberapa tugas-tugas kecil yang nantinya didistribusikan ke worker node. RDD juga dibuat di dalam spark context dan juga didistribusikan ke berbagai worker node. Kemudian RDD akan dicache di dalam worker node tersebut.\\
+Worker node adalah node pekerja yang pekerjaannya adalah pada dasarnya mengerjakan tugas-tugas yang diberikan kepadanya. Tugas-tugas tersebut dieksekusi di dalam node tersebut. Tugas tersebut adalah tugas di dalam RDD yang sudah dipartisi. Kemudian, worker node  akan mengembalikan hasilnya kembali ke Spark Context.\\
+Jadi secara garis besar, Spark Context mengambil pekerjaan, memecah pekerjaan dalam tugas-tugas/tasks dan mendistribusikannya ke worker node. Tugas-tugas tersebut bekerja pada RDD yang dipartisi, melakukan operasi, mengumpulkan hasil dan mengembalikannya ke Spark Context. 
+Jika node worker ditambah, maka pekerjaan akan menjadi lebih cepat selesai. Hal ini terjadi karena pekerjaan dapat dipecah ke lebih banyak partisi dan dapat mengeksekusi pekerjaan tersebut secara paralel dalam banyak sistem yang berbeda. Besar memori juga akan bertambah yang berefek pada meningkatnya kekuatan mencache pekerjaan.
+Oleh karena itu, pekerjaan dapat dieksekusi dengan lebih cepat.
+
+\section{Scala}
+\label{sec:scala}
 
 Mengapa menggunakan \LaTeX{} untuk buku skripsi dan apa keunggulan/kerugiannya bagi mahasiswa dan pembuat template. 
 
-\dtext{13-14}
+Scala adalah bahasa pemrograman yang berbasis Java Development Kit. Bahasa Scala menyediakan optimasi untuk kompleksitas kode dan concise notation (notasi singkat). Concise Notation artinya memiliki banyak informasi dalam simbol atau tulisan yang sangat sedikit. Bahasa Scala juga kompatibel dengan bahasa Java. Oleh karena itu, Scala juga mendukung pemrograman berbasis objek (object-oriented) yang hasilnya adalah kode yang pendek namun berbobot. Selain itu, kompatibel dengan Java juga memungkinkan Scala untuk menggunakan keuntungan dari Java Virtual Machine (JVM) dan juga menggunakan library dari Java.
+\subsection{Pemrograman Dasar Scala}
+
+\subsection{Operasi Map Reduce dengan Scala}
 
 
-\section{Template Skripsi FTIS UNPAR}
-\label{sec:template}
- 
+\section{Klasifikasi}
+\label{sec:klasifikasi}
+Di dalam KBBI, klasifikasi adalah penyusunan bersistem dalam kelompok atau golongan menurut kaidah atau standar yang ditetapkan. Klasifikasi adalah pembagian sesuatu menurut kelas-kelas. Klasifikasi dilakukan untuk memprediksi suatu objek dengan atribut-atribut tertentu berada di dalam kelompok kelas yang mana. Cara klasifikasi ada bermacam-macam dan dengan akurasi yang bermacam-macam pula. Salah satu metode klasifikasi yang ada di machine learning adalah ensemble method.
+
+Ensemble Method atau metode ensemble adalah algoritma dalam machine learning dimana algoritma ini adalah algoritma pencarian solusi prediksi terbaik dibandingkan dengan algoritma yang lain karena metode ensemble ini menggunakan beberapa algoritma pembelajaran untuk pencapaian solusi prediksi yang lebih baik daripada algoritma yang bisa diperoleh dari salah satu pembelajaran algoritma saja. Cara menerapkan algoritma ini ada bermacam-macam dan salah satu yang paling sederhana adalah dengan cara bootstrap aggregating atau disingkat bagging.
+
+Bootstrap Aggregating atau bagging merupakan metode yang dapat memperbaiki hasil dari algoritma klasifikasi machine learning dengan menggabungkan klasifikasi prediksi dari beberapa model. Hal ini digunakan untuk mengatasi ketidakstabilan pada model yang kompleks dengan kumpulan data yang relatif kecil. Bagging adalah salah satu algoritma berbasis ensemble yang paling awal dan paling sederhana, namun efektif. Bagging paling cocok untuk masalah dengan dataset pelatihan yang relatif kecil. Bagging mempunyai variasi yang disebut Pasting Small Votes. cara ini dirancang untuk masalah dengan dataset pelatihan yang besar, mengikuti pendekatan yang serupa, tetapi membagi dataset besar menjadi segmen yang lebih kecil.
+
+\subsection{Teknik Klasifikasi di Spark MLlib}
 Akan dipaparkan bagaimana menggunakan template ini, termasuk petunjuk singkat membuat referensi, gambar dan tabel.
 Juga hal-hal lain yang belum terpikir sampai saat ini. 
  
-\dtext{15-16}
-
-\subsection{Tabel}  
-Berikut adalah contoh pembuatan tabel. 
-Penempatan tabel dan gambar secara umum diatur secara otomatis oleh \LaTeX{}, perhatikan contoh di file bab2.tex untuk melihat bagaimana cara memaksa tabel ditempatkan sesuai keinginan kita.
-
-Perhatikan bawa berbeda dengan penempatan judul gambar gambar, keterangan tabel harus diletakkan di atas tabel!!
-Lihat Tabel~\ref{tab:contoh1} berikut ini:
-
-\begin{table}[H] %atau h saja untuk "kira kira di sini"
-	\centering 
-	\caption{Tabel contoh}
-	\label{tab:contoh1}
-	\begin{tabular}{cccc}
-		\toprule
-		& $v_{start}$ & $\mathcal{S}_{1}$ & $v_{end}$\\
-
-		\midrule
-		$\tau_{1}$ & 1 & 12& 20\\
-		$\tau_{2}$ & 1 &  & 20\\
-		$\tau_{3}$ & 1 & 9 & 20\\
-		$\tau_{4}$ & 1 &  & 20\\
-
-		\bottomrule
-		
-	\end{tabular} 
-\end{table}
-Tabel~\ref{tab:cthwarna1} dan Tabel~\ref{tab:cthwarna2} berikut ini adalah tabel dengan sel yang berwarna dan ada dua tabel yang bersebelahan. 
-\begin{table}[H]
-	\begin{minipage}[c]{0.49\linewidth}
-		\centering
-		\caption{Tabel bewarna(1)}
-		\label{tab:cthwarna1}
-		\begin{tabular}{ccccc}
-			\toprule
-			 & $v_{start}$ & $\mathcal{S}_{2}$ & $\mathcal{S}_{1}$ & $v_{end}$\\
-			
-			\midrule
-			$\tau_{1}$ & 1 & 5 \cellcolor{green}& 12& 20\\
-			$\tau_{2}$ & 1 & 8 \cellcolor{green}& & 20\\
-			$\tau_{3}$ & 1 & 2/8/17 \cellcolor{green}& 9 & 20\\
-			$\tau_{4}$ & 1 & \cellcolor{red}& & 20\\
-			
-			\bottomrule
-
-		\end{tabular}
-	\end{minipage}
-	\begin{minipage}[c]{0.49\linewidth}
-		
-		\centering 
-		\caption{Tabel bewarna(2)}
-		\label{tab:cthwarna2}
-		\begin{tabular}{ccccc}
-			\toprule
-			 & $v_{start}$ & $\mathcal{S}_{1}$ & $\mathcal{S}_{2}$ & $v_{end}$\\
-			
-			\midrule
-			$\tau_{1}$ & 1 & 12& 5 \cellcolor{red} &20\\
-			$\tau_{2}$ & 1 &  &  8 \cellcolor{green} &20\\
-			$\tau_{3}$ & 1 & 9 & 2/8/17 \cellcolor{green} &20\\
-			$\tau_{4}$ & 1 &   & \cellcolor{red} &20\\
-			
-			\bottomrule
-		
-		\end{tabular}
-	\end{minipage}
-\end{table}
-
- 
-\subsection{Kutipan}
-\label{subs:kutipan} 
-Berikut contoh kutipan dari berbagai sumber, untuk keterangan lebih lengkap, silahkan membaca file referensi.bib yang disediakan juga di template ini.
-Contoh kutipan:
-\begin{itemize}
-	\item Buku:~\cite{berg:08:compgeom} 
-	\item Bab dalam buku:~\cite{kreveld:04:GIS}
-	\item Artikel dari Jurnal:~\cite{buchin:13:median}
-	\item Artikel dari prosiding seminar/konferensi:~\cite{kreveld:11:median}
-	\item Skripsi/Thesis/Disertasi:~\cite{lionov:02:animasi}~\cite{wiratma:10:following}~\cite{wiratma:22:later}
-	\item Technical/Scientific Report:~\cite{kreveld:07:watertight}
-	\item RFC (Request For Comments):~\cite{RFC1654}
-	\item Technical Documentation/Technical Manual:~\cite{Z.500}~\cite{unicode:16:stdv9}~\cite{google:16:and7}
-	\item Paten:~\cite{webb:12:comm}
-	\item Tidak dipublikasikan:~\cite{wiratma:09:median}~\cite{lionov:11:cpoly}
-	\item Laman web:~\cite{erickson:03:cgmodel}  
-	\item Lain-lain:~\cite{agung:12:tango}
-\end{itemize}    
-  
-\subsection{Gambar}
-
-Pada hampir semua editor, penempatan gambar di dalam dokumen \LaTeX{} tidak dapat dilakukan melalui proses {\it drag and drop}.
-Perhatikan contoh pada file bab2.tex untuk melihat bagaimana cara menempatkan gambar.
-Beberapa hal yang harus diperhatikan pada saat menempatkan gambar:
-\begin{itemize}
-	\item Setiap gambar {\bf harus} diacu di dalam teks (gunakan {\it field} {\sc label})
-	\item {\it Field} {\sc caption} digunakan untuk teks pengantar pada gambar. Terdapat dua bagian yaitu yang ada di antara tanda $[$ dan $]$ dan yang ada di antara tanda $\{$ dan $\}$. Yang pertama akan muncul di Daftar Gambar, sedangkan yang kedua akan muncul di teks pengantar gambar. Untuk skripsi ini, samakan isi keduanya.
-	\item Jenis file yang dapat digunakan sebagai gambar cukup banyak, tetapi yang paling populer adalah tipe {\sc png} (lihat Gambar~\ref{fig:ularpng}), tipe {\sc jpg} (Gambar~\ref{fig:ularjpg}) dan tipe {\sc pdf} (Gambar~\ref{fig:ularpdf})
-	\item Besarnya gambar dapat diatur dengan {\it field} {\sc scale}.
-	\item Penempatan gambar diatur menggunakan {\it placement specifier} (di antara tanda  $[$ dan $]$ setelah deklarasi gambar.
-	Yang umum digunakan adalah {\bf H} untuk menempatkan gambar {\bf sesuai} penempatannya di file .tex atau  {\bf h} yang berarti "kira-kira" di sini. \\
-	Jika tidak menggunakan {\it placement specifier}, \LaTeX{} akan menempatkan gambar secara otomatis untuk menghindari bagian kosong pada dokumen anda.
-	Walaupun cara ini sangat mudah, hindarkan terjadinya penempatan dua gambar secara berurutan. 	
-	\begin{itemize}
-		\item Gambar~\ref{fig:ularpng} ditempatkan di bagian atas halaman, walaupun penempatannya dilakukan setelah penulisan 3 paragraf setelah penjelasan ini.
-		\item Gambar~\ref{fig:ularjpg} dengan skala 0.5 ditempatkan di antara dua buah paragraf. Perhatikan penulisannya di dalam file bab2.tex!
-		\item Gambar~\ref{fig:ularpdf} ditempatkan menggunakan {\it specifier} {\bf h}.
-	\end{itemize}
-\end{itemize}
- 
-\dtext{17-18}
-\begin{figure} 
-	\centering  
-	\includegraphics[scale=1]{ular-png}  
-	\caption[Gambar {\it Serpentes} dalam format png]{Gambar {\it Serpentes} dalam format png} 
-	\label{fig:ularpng} 
-\end{figure} 
-
-\dtext{19-20}
-\begin{figure}[H]
-	\centering  
-	\includegraphics[scale=0.5]{ular-jpg}  
-	\caption[Ular kecil]{Ular kecil} 
-	\label{fig:ularjpg} 
-\end{figure} 
-\dtext{21-22}
-
-\begin{figure}[ht] 
-	\centering  
-	\includegraphics[scale=1]{ular-pdf}  
-	\caption[ {\it Serpentes} betina]{ {\it Serpentes} jantan} 
-	\label{fig:ularpdf} 
-\end{figure} 
+\subsubsection{Logistic Regression}
+\subsubsection{Decision Tree}
+\subsubsection{Naive Bayes}
+\subsubsection{Random Forest}
+\subsubsection{Gradient Boosted Tree}
  
