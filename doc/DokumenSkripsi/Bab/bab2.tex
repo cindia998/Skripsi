@@ -61,10 +61,88 @@ RDD bisa melakukan 2 operasi sebagai berikut:
 \end{itemize}
 
 \subsubsection{Transformasi RDD}
-RDD dapat melakukan berbagai macam operasi transformasi, berikut adalah operasi-operasi tranformasi yang dapat dilakukan oleh RDD.
+RDD dapat melakukan berbagai macam operasi transformasi, berikut adalah operasi-operasi tranformasi yang dapat dilakukan oleh RDD.\\
+\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
+\hline 
+No. & Transformasi & Arti \\ 
+\hline 
+1 & map(func) & Mengembalikan RDD baru, terbentuk dari memasukkan setiap elemen melalui fungsi func. \\ 
+\hline 
+2 & filter(func) & Mengembalikan dataset baru, terbentuk dari memilih elemen yang bernilai \textit{true} dari fungsi func.\\ 
+\hline 
+3 & flatMap(func) & Mirip dengan map, tapi setiap \textit{input item} dapat di map ke 0 atau lebih \textit{output item} (jadi fungsi func harus mengembalikan sebuah \textit{Sequence} daripada hanya sebuah \textit{item}.\\ 
+\hline 
+4 & mapPartitions(func) & Mirip dengan map, tapi berjalan secara terpisah di setiap partisi(blok) dari RDD, jadi fungsi func harus bertipe Iterator<T> => Iterator<U> saat berjalan dalam sebuah RDD tipe T.\\ 
+\hline 
+5 & mapPartitionsWithIndex(func) & Mirip dengan mapPartitions, akan tetapi juga menyediakan fungsi func dengan sebuah nilai integer representasi dari index dari partisi, jadi fungsi func harus bertipe (Int, Iterator<T>) => Iterator<U> saat berjalan di sebuah RDD dengan tipe T. \\ 
+\hline 
+6 & sample(withReplacement,fraction, seed) & Membuat sampel dari sebagian (\textit{fraction}) data, dengan atau tidak replacement, menggunakan \textit{random number generator seed} yang diberikan.\\ 
+\hline 
+7 & union(otherDataset) & Mengembalikan dataset baru yang berisi gabungan (union) elemen dari dataset dan dataset dari parameter.\\ 
+\hline 
+8 & intersection(otherDataset) & Mengembalikan RDD baru yang berisi irisan (intersection) antara elemen dari dataset dan dataset dari parameter.\\ 
+\hline 
+9 & distinct([numTasks]) & Mengembalikan dataset baru yang berisi elemen yang berbeda-beda dari dataset.\\ 
+\hline 
+10 & groupByKey([numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V), mengembalikan dataset dari pasangan (K, Iterable<V>). \\ 
+\hline
+11 & reduceByKey(func, [numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V), mengembalikan dataset dari pasangan (K,V) dimana values dari setiap key diagregasi menggunakan fungsi reduce func yang diberikan di parameter, dimana harus bertipe (V,V)=> V. Seperti pada groupByKey, jumlah dari tugas reduce dapat dikonfigurasi melalui parameter kedua yang opsional. \\ 
+\hline  
+\end{tabular}
+
+\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
+\hline
+12 & aggregateByKey(zeroValue)(seqOp, combOp, [numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V), mengembalikan dataset dari pasangan (K,U) dimana values dari setiap key diagregasi menggunakan fungsi penggabungan yang diberikan (combOP) dan sebuah value "nol" netral. Memungkinkan sebuah tipe value yang diagregasi yang berbeda dari tipe value input, sambil menghindari alokasi yang tidak perlu. Seperti pada groupByKey, jumlah dari tugas reduce dapat dikonfigurasi melalui parameter kedua yang opsional.\\ 
+\hline
+13 & sortByKey([ascending],[numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V) dimana K mengimplementasikan Ordered, mengembalikan dataset dari pasangan (K,V) terurut berdasarkan keys secara menaik atau menurun, sesuai parameter Boolean ascending.\\ 
+\hline
+14 & join(otherDataset, [numTasks]) & Saat dipanggil pada dataset dari tipe (K,V) dan (K,W), mengembalikan dataset dari pasangan (K,(V,W)) dengan semua pasangan dari elemen tiap key. Outer joins didukung dengan leftOuterJoin, rightOuterJoin, dan fullOuterJoin.\\ 
+\hline
+15 & cogroup(otherDataset,[numTasks]) & Saat dipanggil pada dataset dari tipe (K,V) dan (K,W), mengembalikan sebuah dataset dari tuple (K,Iterable<V>,Iterable<W>)). Operasi ini juga disebut 'group With'. \\ 
+\hline
+16 & cartesian(otherDataset) & Saat dipanggil pada dataset dari tipe T dan U, mengembalikan sebuah dataset dari pasangan (T,U) (semua pasangan elemen)\\ 
+\hline
+17 & pipe(command, [envVars]) &  Pipe setiap partisi dari RDD melalui shell command, contohnya Perl atau bash script. Elemen RDD ditulis ke proses stdin dan baris output ke stdout dikembalikan sebagai RDD strings\\ 
+\hline
+18 & coalesce(numPartitions) & Mengurangi jumlah partisi di dalam RDD hingga numPartitions. Berguna untuk menjalankan operasi secara lebih efisien setelah memfilter dataset berukuran besar\\ 
+\hline
+19 & repartition(numPartitions) & Mengacak ulang data di dalam RDD secara acak untuk menciptakan antara lebih sedikit partisi dan menyeimbangkannya. Method ini selalu mengacak semua data di jaringan.\\ 
+\hline
+20 & repartitionAndSortWithinPartitions(partitioner) & Mempartisi ulang RDD berdasarkan partitioner yang diberikan dan, dalam setiap partisi yang dihasilkan, rekord diurutkan berdasarkan key. Hal ini lebih efisien daripada memanggil repartition dan kemudian menurutkannya pada setiap partisi. \\ 
+\hline
+\end{tabular} 
 
 \subsubsection{Aksi RDD}
-RDD juga dapat melakukan berbagai operasi aksi. Berikut adalah operasi-operasi aksi yang dapat dilakukan oleh RDD.
+RDD juga dapat melakukan berbagai operasi aksi. Berikut adalah operasi-operasi aksi yang dapat dilakukan oleh RDD.\\
+\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
+\hline 
+No & Action & Arti \\ 
+\hline 
+1 & reduce(func) & Mengagregasi elemen dataset menggunakan fungsi func (dimana func menerima dua argumen/parameter dan mengembalikan satu). Fungsi harus komutatif dan asosiatif supaya dapat dikomputasi secara paralel dengan benar. \\ 
+\hline 
+2 & collect() & Mengembalikan semua elemen dari dataset sebagai sebuah array dalam driver program. Aksi ini biasanya berguna setelah melakukan filter atau operasi lain yang mengembalikan subset kecil dari data. \\ 
+\hline 
+3 & count() & Mengembalikan jumlah elemen di dalam dataset. \\ 
+\hline 
+4 & first() & Mengembalikan elemen pertama dari dataset. \\ 
+\hline 
+5 & take(n) & Mengembalikan sebuah array dengan n elemen pertama dari dataset \\ 
+\hline 
+6 & takeSample (withReplacement,num, [seed]) & Mengembalikan sebuah array dengan sampel acak dari banyak elemen dataset, dengan atau tidak replacement, menentukan random number generator seed secara optional. \\ 
+\hline 
+7 & takeOrdered(n, [ordering]) & Mengembalikan n elemen pertama dari RDD mengunakan antara natural ordernya atau sebuah comparator buatan sendiri. \\ 
+\hline 
+8 & saveAsTextFile(path) & Menulis elemen dari dataset sebagai text file di dalam directory yang diberikan (pada parameter) di dalam file sistem lokal, dalam HDFS atau file sistem Hadoop yang lain. Spark memanggil toString pada setiap elemen untuk mengubah elemen dataset menjadi baris text di dalam file. \\ 
+\hline 
+9 & saveAsSequenceFile(path) & Menulis elemen dari dataset sebagai Hadoop SequenceFile di dalam path yang diberikan (pada parameter) dalam file sistem lokal, HDFS atau file sistem Hadoop yang lainnya. Aksi ini tersedia dalam pasangan key-value dari RDD yang mengimplementasikan Writable Interface milik Hadoop. Di Scala, aksi ini juga tersedia dalam tipe yang secara implisit dapat diubah ke Writable (Spark menyediakan konversi untuk tipe dasar seperti Int, Double, String, dll. \\ 
+\hline 
+10 & saveAsObjectFile(path) & Menulis elemen dari dataset dalam format sederhana menggunakan serialisasi Java, dimana nantinya bisa dimuat menggunakan SparkContext.objectFile().\\ 
+\hline 
+11 & countByKey() & Hanya tersedia pada RDD dari tipe (K,V). Mengembalikan sebuah hashmap dari pasangan (K, Int) dengan jumlah dari setiap key.\\ 
+\hline 
+12 & foreach(func) & Menjalankan fungsi func dalam setiap elemen di dataset. Hal ini biasanya dilakukan untuk efek samping dari suatu hal sepeti mengupdate Accumulator atau berinteraksi dengan sistem penyimpanan eksternal.\\ 
+\hline 
+\end{tabular} 
 
 \subsection{Arsitektur Spark}
 Dalam spark, terdapat yang namanya master node dan juga worker node. Master node bertugas untuk memanajemen pembagian RDD dan juga pembagian tugas-tugas ke semua worker node yang ada. Master node memiliki sebuah driver program. Tugas dari driver program ini adalah untuk menjalankan aplikasi yang telah dibuat. Kode yang dibuat bertindak sebagai driver program atau jika menggunakan interactive shell, shell yang bertindak sebagai driver program. \\
@@ -79,23 +157,50 @@ Oleh karena itu, pekerjaan dapat dieksekusi dengan lebih cepat.
 
 Mengapa menggunakan \LaTeX{} untuk buku skripsi dan apa keunggulan/kerugiannya bagi mahasiswa dan pembuat template. 
 
-Scala adalah bahasa pemrograman yang berbasis Java Development Kit. Bahasa Scala menyediakan optimasi untuk kompleksitas kode dan concise notation (notasi singkat). Concise Notation artinya memiliki banyak informasi dalam simbol atau tulisan yang sangat sedikit. Bahasa Scala juga kompatibel dengan bahasa Java. Oleh karena itu, Scala juga mendukung pemrograman berbasis objek (object-oriented) yang hasilnya adalah kode yang pendek namun berbobot. Selain itu, kompatibel dengan Java juga memungkinkan Scala untuk menggunakan keuntungan dari Java Virtual Machine (JVM) dan juga menggunakan library dari Java.
-\subsection{Pemrograman Dasar Scala}
+Scala adalah bahasa pemrograman yang berbasis Java Development Kit. Bahasa Scala menyediakan optimasi untuk kompleksitas kode dan concise notation (notasi singkat). Concise Notation artinya suatu kode memiliki banyak informasi dalam simbol atau tulisan yang sedikit   yang hasilnya adalah kode yang pendek namun berbobot. Bahasa Scala juga kompatibel dengan bahasa Java. Oleh karena itu, Scala juga mendukung pemrograman berbasis objek (object-oriented) sama seperti Java. Selain itu, berkompatibel dengan Java juga memungkinkan Scala untuk menggunakan keuntungan dari Java Virtual Machine (JVM) dan juga menggunakan library dari Java.
 
-\subsection{Operasi Map Reduce dengan Scala}
+\subsection{Pemrograman Dasar Scala}
+Bahasa Scala mirip dengan bahasa pemrograman Java yang digabungkan dengan bahasa pemrograman Python. Kemiripan dengan bahasa Java terletak pada inisialisasi kelas, library yang dipakai, adanya kelas main, mendukung object oriented, dan lain-lain. Sedangkan kemiripan dengan bahasa Python antara lain saat inisialisasi variabel, inisialisasi fungsi, tidak perlu semicolon(;) untuk pindah baris, dan definisi tipe data saat membuat variabel atau kembalian fungsi itu opsional. Berikut adalah sintaks-sintaks dasar dalam bahasa Scala.\\
+\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
+\hline 
+No & Kode & Fungsi \\ 
+\hline 
+1 & class NamaKelas(constructor:TipeData) \{ \ldots \} & Menginisialisasi kelas. Constructor dan TipeData opsional. \\ 
+\hline 
+2 & new NamaKelas() & Menginstansiasi kelas \\ 
+\hline 
+3 & val namavalue: TipeData & Menginisialisasi value (TipeData opsional). Value adalah atribut yang tidak dapat diubah (immutable). \\ 
+\hline 
+4 & var namavariabel: TipeData & Menginisialisasi variabel (TipeData opsional). Variabel adalah atribut yang dapat diubah (mutable). \\ 
+\hline 
+5 & def namadef(param: TipeData): TipeKembalian \{ \ldots \} & Menginisialisasi fungsi. Parameter, TipeData, dan TipeKembalian adalah opsional.  \\ 
+\hline 
+6 & object NamaObject \{ \ldots \} & Menginisialisasi objek \\ 
+\hline 
+7 & def main(args: Array[String]):Unit \{ \ldots \} & Meninisialisasi fungsi main \\ 
+\hline 
+8 & if(ekspresiboolean1) \{ \ldots \}else if(ekspresiboolean2) \{ \ldots \} else \{ \ldots \} & Branching \\ 
+\hline 
+9 & while(ekspresiboolean) \{ \ldots \} & Looping dengan while \\ 
+\hline 
+10 & for(i<-0 until max by inc) \{ \ldots \} & Looping dengan for dari 0 hingga max. inc adalah increment dari i. \\ 
+\hline 
+\end{tabular} 
 
 
 \section{Klasifikasi}
 \label{sec:klasifikasi}
-Di dalam KBBI, klasifikasi adalah penyusunan bersistem dalam kelompok atau golongan menurut kaidah atau standar yang ditetapkan. Klasifikasi adalah pembagian sesuatu menurut kelas-kelas. Klasifikasi dilakukan untuk memprediksi suatu objek dengan atribut-atribut tertentu berada di dalam kelompok kelas yang mana. Cara klasifikasi ada bermacam-macam dan dengan akurasi yang bermacam-macam pula. Salah satu metode klasifikasi yang ada di machine learning adalah ensemble method.
+Di dalam KBBI, klasifikasi adalah penyusunan bersistem dalam kelompok atau golongan menurut kaidah atau standar yang ditetapkan. Klasifikasi adalah pembagian sesuatu menurut kelas-kelas. Klasifikasi dilakukan untuk memprediksi suatu objek dengan atribut-atribut tertentu berada di dalam kelompok kelas yang mana. Cara klasifikasi ada bermacam-macam dan dengan akurasi yang bermacam-macam pula. Karena akurasi yang bermacam-macam, maka ada metode-metode yang tujuannya adalah meningkatkan akurasi dari klasifikasi. Salah satu caranya adalah dengan metode ensemble.
 
-Ensemble Method atau metode ensemble adalah algoritma dalam machine learning dimana algoritma ini adalah algoritma pencarian solusi prediksi terbaik dibandingkan dengan algoritma yang lain karena metode ensemble ini menggunakan beberapa algoritma pembelajaran untuk pencapaian solusi prediksi yang lebih baik daripada algoritma yang bisa diperoleh dari salah satu pembelajaran algoritma saja. Cara menerapkan algoritma ini ada bermacam-macam dan salah satu yang paling sederhana adalah dengan cara bootstrap aggregating atau disingkat bagging.
+Ensemble Method atau metode ensemble adalah algoritma dalam machine learning dimana algoritma ini adalah algoritma pencarian solusi prediksi terbaik dibandingkan dengan algoritma yang lain. Metode ensemble ini menggunakan beberapa algoritma pembelajaran untuk pencapaian solusi prediksi yang lebih baik daripada algoritma yang bisa diperoleh dari salah satu pembelajaran algoritma saja. Cara kerja dari metode ini adalah dengan memilih sebagian data dari data train secara acak dan membuat model dengan data train yang dipilih tersebut. Proses membuat model tersebut dilakukan berkali-kali dengan terus memilih data train secara acak. Biasanya proses tersebut dilakukan 500 sampai 1000 kali hingga terbentuk 500 hingga 1000 model klasifikasi. Kemudian, rekord yang ingin diklasifikasi dites disemua model. Proses ini menggunakan teknik bagging.
 
-Bootstrap Aggregating atau bagging merupakan metode yang dapat memperbaiki hasil dari algoritma klasifikasi machine learning dengan menggabungkan klasifikasi prediksi dari beberapa model. Hal ini digunakan untuk mengatasi ketidakstabilan pada model yang kompleks dengan kumpulan data yang relatif kecil. Bagging adalah salah satu algoritma berbasis ensemble yang paling awal dan paling sederhana, namun efektif. Bagging paling cocok untuk masalah dengan dataset pelatihan yang relatif kecil. Bagging mempunyai variasi yang disebut Pasting Small Votes. cara ini dirancang untuk masalah dengan dataset pelatihan yang besar, mengikuti pendekatan yang serupa, tetapi membagi dataset besar menjadi segmen yang lebih kecil.
-
+Bootstrap Aggregating atau bagging merupakan metode yang dapat memperbaiki hasil dari algoritma klasifikasi machine learning dengan menggabungkan klasifikasi prediksi dari beberapa model. Hasil klasifikasi dari beberapa model tersebut kemudian dihitung secara voting. Hasil voting kelas terbanyak akan menjadi label dari rekord yang ingin diprediksi. Tujuan dari penggabungan hasil prediksi dari beberapa model adalah untuk mengatasi ketidakstabilan pada model yang kompleks. Bagging adalah salah satu algoritma berbasis ensemble yang paling awal dan paling sederhana, namun efektif. 
+ 
+ 
 \subsection{Teknik Klasifikasi di Spark MLlib}
 Akan dipaparkan bagaimana menggunakan template ini, termasuk petunjuk singkat membuat referensi, gambar dan tabel.
 Juga hal-hal lain yang belum terpikir sampai saat ini. 
+Ada banyak algoritma untuk mengimplementasikan proses klasifikasi. Diantara banyak algoritma tersebut, algortma yang terdapat pada Spark Machine Learning Library hanya ada 5 dan 2 diantaranya sudah mengaplikasikan metode ensemble dari 1 algoritma dasar yakni decision tree dengan metode ensemblenya yakni random forest dan gradient boosted tree. Hal ini meninggalkan hanya 2 algoritma yang dapat dipilih untuk diaplikasikan metode ensemble yakni algoritma logistic regression dan naive bayes.
  
 \subsubsection{Logistic Regression}
 \subsubsection{Decision Tree}
