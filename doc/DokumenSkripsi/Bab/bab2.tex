@@ -2,30 +2,32 @@
 \chapter{Landasan Teori}
 \label{chap:teori}
 
-\section{Apache Spark}
+Pada bab ini akan dijelaskan mengenai dasar-dasar teori yang akan digunakan dalam penyusunan Skripsi ini. Karena penyusunan skripsi ini menggunakan Apache Spark maka teori yang akan dibahas pertama kali pada bab ini adalah penjelasan mengenai Spark dan cara kerjanya. Teori berikutnya adalah penjelasan mengenai RDD dan cara kerjanya, dan juga fungsi-fungsi RDD yang ada. Setelah itu, akan dijelaskan juga mengenai klasifikasi, apa saja klasifikasi yang ada pada Spark MLlib begitu pula dengan penjelasan source code dari algoritma tertentu yang akan dijadikan algoritma secara inkremental. 
+
+\section{Apache Spark[]}
 \label{sec:spark} 
- 
-Rencananya akan diisi dengan penjelasan umum mengenai buku skripsi.
+Apache spark adalah komputasi cluster cepat yang dirancang untuk komputasi cepat[]. Maksud dari komputasi cluster adalah suatu komputasi dilakukan oleh lebih dari satu komputer. Dengan kata lain, komputasi dilakukan bersama-sama secara paralel dalam lebih dari satu komputer. Komputasi cepat disini dikarenakan Apache spark dibangun di atas Hadoop MapReduce dan Spark meningkatkan model MapReduce yang sudah ada agar dapat menggunakan lebih banyak jenis perhitungan secara efisien. Sama seperti Hadoop, Spark dirancang untuk memproses Big Data. Spark dapat memproses berbagai data yang besar dan berat seperti aplikasi batch, algoritma iteratif, query yang interaktif dan streaming. Yang membedakan Spark dan Hadoop adalah fitur utama Spark dimana Spark menjalankan komputasi cluster di dalam memori sehingga dapat meningkatkan kecepatan pemrosesan aplikasi.
 
-Apache spark adalah komputasi cluster cepat yang dirancang untuk komputasi cepat. Apache spark dibangun di atas Hadoop MapReduce dan meningkatkan model MapReduce agar dapat menggunakan lebih banyak jenis perhitungan secara efisien. Fitur utama spark adalah komputasi cluster di dalam memori yang meningkatkan kecepatan pemrosesan aplikasi. Spark dirancang untuk mencakup berbagai data yang besar dan berat seperti aplikasi batch, algoritma iteratif, query yang interaktif dan streaming.
-
-\subsection{Fitur-fitur Apache Spark}
-Apache Spark digunakan dikarenakan banyaknya kelebihan-kelebihan yang dimilikinya. Kelebihan tersebut antara lain.
+Apache Spark digunakan karena banyaknya kelebihan-kelebihan yang dimilikinya yakni:
 \begin{enumerate}
-\item Kecepatan\\
-Spark membantu menjalankan aplikasi di cluster Hadoop, hingga 100 kali lebih cepat dalam memori, dan 10 kali lebih cepat saat dijalankan pada disk. Hal tersebut dapat terjadi dengan cara mengurangi jumlah operasi baca / tulis ke disk dan cara menguranginya adalah dengan menyimpan pemrosesan data di dalam memori.
-\item Kemampuan cache yang kuat.
-\item Dapat dipasang di berbagai platform misal Mesos, Hadoop via Yarn atau cluster manager milik spark sendiri.
-\item Menyediakan komputasi real-time.
-\item Mendukung banyak bahasa (Java, Scala, dan Python).
-\item Spark dapat menangani penambahan beban misalnya penambahan volume data atau jumlah pengguna tanpa penurunan kinerja yang berarti.
+\item Speed\\
+Spark membantu menjalankan aplikasi di \textit{cluster Hadoop} hingga 100 kali lebih cepat karena komputasi dalam memori, dan 10 kali lebih cepat saat dijalankan pada disk. Hal tersebut dapat terjadi dengan cara mengurangi jumlah operasi baca tulis ke disk. Hal tersebut dimungkinkan dengan menyimpan pemrosesan data di dalam memori.
+\item Powerful Caching\\
+Spark mendukung layer pemrograman sederhana sehingga memberikan kemampuan cache yang kuat dan juga kemampuan disk yang persistence. 
+\item Deployment\\
+Spark dapat dipasang di berbagai platform misal Mesos, Hadoop via Yarn atau cluster manager milik spark sendiri.
+\item Real-time\\
+Spark menyediakan komputasi \textit{Real Time} dan \textit{low latency} dikarenakan Spark menjalankan komputasi di dalam memori.
+\item Polygot\\
+Spark dapat diimplementasikan dalam banyak bahasa yakni bahasa Java, Scala, dan Python.
+\item Scalable
+Sama seperti Hadoop, Spark juga mendukung menambahkan node-node baru ke dalam cluster yang ada. Jika semakin banyak node yang ditambahkan maka pemrosesan data akan semakin cepat. Pemrosesan data juga akan jadi lebih murah karena banyak komputer dengan spesifikasi standar lebih murah dari pada dengan membeli komputer dengan spesifikasi tinggi.
 \end{enumerate}
 
-\subsection{Komponen-komponen Spark}
-Komponen-komponen yang ada pada spark antara lain.
+Spark memiliki banyak komponen-komponen yang mendukung pemrosesan \textit{big data}. Satu komponen inti dari Spark yang harus ada dalam setiap program Spark adalah Spark Core. Komponen-komponen yang lain hanya komponen pendukung Spark yang sifatnya opsional(dapat dipakai maupun tidak), akan tetapi tentu saja juga mempermudah proses komputasi big data. Berikut adalah penjelasan singkat mengenai komponen-komponen yang ada pada Spark.
 \begin{enumerate}
 \item Apache Spark Core\\
-Spark Core adalah komponen yang mendasari semua platform spark dengan semua fungsi-fungsinya. Menyediakan komputasi dalam memory dan mereferensikan dataset-dataset di dalam sistem penyimpanan eksternal.
+Spark Core adalah komponen yang mendasari semua platform spark dengan semua fungsi-fungsinya. Dengan kata lain, Spark Core adalah komponen yang harus ada jika ingin menggunakan fungsi-fungsi yang ada pada Spark. Spark Core menyediakan komputasi dalam memory dan mereferensikan dataset-dataset di dalam sistem penyimpanan eksternal.
 \item Spark SQL \\
 Spark SQL adalah komponen diatas SparkCore yang menyediakan abstraksi data yang disebut SchemaRDD. SchemaRDD menyediakan bantuan untuk kueri-kueri data terstruktur dan data semi-terstruktur.
 \item Spark Streaming\\
@@ -40,28 +42,16 @@ SparkR adalah package milik R yang menyediakan implementasi data frame terdistri
 \end{enumerate}
 
 \subsection{Resilient Distributed Dataset}
-RDD adalah bagian inti dari semua aplikasi Spark. Secara umum, RDD bersifat immutable.  Immutable artinya objek tersebut tidak dapat diubah setelah dibuat, akan tetapi dapat ditransformasi. RDD artinya adalah
-\begin{itemize}
-\item Resilient	: Toleran terhadap kesalahan dan mampu mengembalikan data yang gagal
-\item Distributed	: Data terdistribusi ke semua node-node dalam sebuah cluster
-\item Dataset		: Kumpulan partisi data dengan value
-\end{itemize}
-Jadi, dapat disimpulkan bahwa RDD adalah dataset yang tersebar ke semua node di dalam sebuah cluster dan data tersebut tahan/toleran terhadap kesalahan serta dapat mengembalikan data yang gagal.
+RDD adalah bagian inti dari semua aplikasi Spark. Dataset-dataset yang ingin diproses menggunakan Spark akan dibaca melalui Spark Context sebagai objek RDD. RDD adalah dataset yang tersebar ke semua node di dalam sebuah cluster dan data-data tersebut tahan atau toleran terhadap kesalahan dan kerusakan serta dapat mengembalikan data yang gagal diproses. Secara umum, RDD bersifat immutable. Immutable artinya objek tersebut tidak dapat diubah setelah dibuat, akan tetapi objek tersebut dapat ditransformasi serta melakukan aksi. 
 
-Cara kerja RDD adalah data di dalam RDD dibagi menjadi beberapa bagian berdasarkan suatu key. RRD sangat resilient (highly resilient) karena RDD dapat pulih dengan cepat dari kesalahan-kesalahan. Hal tersebut dapat terjadi karena potongan data yang sama direplikasi di beberapa node pelaksana (executor nodes). Jadi, jika satu node pelaksana gagal maka yang lain masih akan memproses data. Oleh karena itu, RDD memungkinkan untuk melakukan perhitungan fungsi terhadap dataset dengan sangat cepat dengan memanfaatkan beberapa node.
+Ada 2 cara membuat RDD, cara pertama adalah dengan memparalelkan koleksi data yang ada di dalam driver program dan cara yang kedua adalah dengan mereferensi dataset di luar storage system seperti shared file system, HDFS, HBase, dan lain-lain. Cara kerja RDD adalah dataset di dalam RDD dibagi menjadi beberapa bagian berdasarkan suatu key. Bagian-bagian data tersebut kemudian akan dibagikan ke seluruh node-node pekerja. Karena itu, RDD memungkinkan untuk melakukan perhitungan fungsi terhadap dataset dengan sangat cepat dengan memanfaatkan beberapa node pekerja. Satu node pekerja dapat menyimpan lebih dari satu bagian data. Selain itu, bagian data yang sama dapat direplikasi di beberapa node pekerja. Jadi, jika satu node pelaksana gagal atau mengalami kesalahan (error) maka yang node yang lain masih bisa memproses data. Oleh karena itulah, RDD disebut dan bersifat sangat \textit{resilient} dimana RDD kebal terhadap kegagalan atau kesalahan dan dapat pulih dengan cepat dari kesalahan. 
 
-Setiap dataset di RDD dibagi menjadi partisi yang logis, yang artinya dapat di komputasi/ dijalankan di node yang berbeda dalam sebuah cluster. Karena sifatnya ini, kita dapat melakukan transformasi atau aksi ke seluruh data secara paralel. Distribusinya dilakukan secara otomatis oleh Spark.
-
-Ada 2 cara membuat RDD, cara pertama adalah dengan memparalelkan koleksi data yang ada di dalam driver program dan cara yang kedua adalah dengan mereferensi dataset di luar storage system seperti shared file system, HDFS, HBase, dan lain-lain.
-
-RDD bisa melakukan 2 operasi sebagai berikut:
-\begin{itemize}
-\item Transformations (transformasi) : operasi yang dipakai untuk membuat RDD baru.
-\item Actions (aksi) : aksi dipakai di dalam RDD untuk memberitahukan Apache Spark untuk menggunakan komputasi dan memberikan hasilnya kembali ke driver.
-\end{itemize}
+Setiap dataset di dalam RDD dibagi menjadi partisi yang logis, yang artinya dapat di komputasi atau dijalankan di node yang berbeda dalam sebuah cluster. Karena sifatnya ini, kita dapat melakukan transformasi atau aksi ke seluruh data secara paralel. Distribusinya dilakukan secara otomatis oleh Spark. 
+RDD bisa melakukan 2 operasi yakni transformasi dan aksi. Transformasi merupakan operasi RDD yang digunakan untuk membuat RDD baru dari RDD yang sudah ada. Contohnya adalah operasi map, filter, dan masih banyak lagi. Operasi yang kedua adalah aksi. Aksi dipakai dalam RDD untuk memberitahukan Spark untuk menggunakan komputasi dan memberikan hasilnya kembali ke driver. Contoh dari operasi ini adalah menuliskan RDD hasil transformasi ke dalam file text(.txt) ke driver komputer atau mengembalikan hanya sebuah value.
 
 \subsubsection{Transformasi RDD}
-RDD dapat melakukan berbagai macam operasi transformasi, berikut adalah operasi-operasi tranformasi yang dapat dilakukan oleh RDD.\\
+RDD dapat melakukan berbagai macam operasi transformasi. Semua operasi transformasi yang dilakukan oleh objek RDD akan menghasilkan RDD baru. Berikut adalah operasi-operasi tranformasi yang dapat dilakukan oleh objek RDD.\\
+
 \begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
 \hline 
 No. & Transformasi & Arti \\ 
@@ -76,29 +66,30 @@ No. & Transformasi & Arti \\
 \hline 
 5 & mapPartitionsWithIndex(func) & Mirip dengan mapPartitions, akan tetapi juga menyediakan fungsi func dengan sebuah nilai integer representasi dari index dari partisi, jadi fungsi func harus bertipe (Int, Iterator<T>) => Iterator<U> saat berjalan di sebuah RDD dengan tipe T. \\ 
 \hline 
-6 & sample(withReplacement,fraction, seed) & Membuat sampel dari sebagian (\textit{fraction}) data, dengan atau tidak replacement, menggunakan \textit{random number generator seed} yang diberikan.\\ 
+6 & sample(withReplacement, fraction, seed) & Membuat sampel dari sebagian (\textit{fraction}) data, dengan atau tidak replacement, menggunakan \textit{random number generator seed} yang diberikan.\\ 
 \hline 
 7 & union(otherDataset) & Mengembalikan dataset baru yang berisi gabungan (union) elemen dari dataset dan dataset dari parameter.\\ 
 \hline 
 8 & intersection(otherDataset) & Mengembalikan RDD baru yang berisi irisan (intersection) antara elemen dari dataset dan dataset dari parameter.\\ 
 \hline 
+\end{tabular}
+
+
+\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
+\hline
 9 & distinct([numTasks]) & Mengembalikan dataset baru yang berisi elemen yang berbeda-beda dari dataset.\\ 
 \hline 
 10 & groupByKey([numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V), mengembalikan dataset dari pasangan (K, Iterable<V>). \\ 
 \hline
-11 & reduceByKey(func, [numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V), mengembalikan dataset dari pasangan (K,V) dimana values dari setiap key diagregasi menggunakan fungsi reduce func yang diberikan di parameter, dimana harus bertipe (V,V)=> V. Seperti pada groupByKey, jumlah dari tugas reduce dapat dikonfigurasi melalui parameter kedua yang opsional. \\ 
-\hline  
-\end{tabular}
-
-\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
+11 & reduceByKey(func,[numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V), mengembalikan dataset dari pasangan (K,V) dimana values dari setiap key diagregasi menggunakan fungsi reduce func yang diberikan di parameter, dimana harus bertipe (V,V)=> V. Seperti pada groupByKey, jumlah dari tugas reduce dapat dikonfigurasi melalui parameter kedua yang opsional. \\ 
 \hline
-12 & aggregateByKey(zeroValue)(seqOp, combOp, [numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V), mengembalikan dataset dari pasangan (K,U) dimana values dari setiap key diagregasi menggunakan fungsi penggabungan yang diberikan (combOP) dan sebuah value "nol" netral. Memungkinkan sebuah tipe value yang diagregasi yang berbeda dari tipe value input, sambil menghindari alokasi yang tidak perlu. Seperti pada groupByKey, jumlah dari tugas reduce dapat dikonfigurasi melalui parameter kedua yang opsional.\\ 
+12 & aggregateByKey(zeroValue) (seqOp, combOp, [numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V), mengembalikan dataset dari pasangan (K,U) dimana values dari setiap key diagregasi menggunakan fungsi penggabungan yang diberikan (combOP) dan sebuah value "nol" netral. Memungkinkan sebuah tipe value yang diagregasi yang berbeda dari tipe value input, sambil menghindari alokasi yang tidak perlu. Seperti pada groupByKey, jumlah dari tugas reduce dapat dikonfigurasi melalui parameter kedua yang opsional.\\ 
 \hline
-13 & sortByKey([ascending],[numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V) dimana K mengimplementasikan Ordered, mengembalikan dataset dari pasangan (K,V) terurut berdasarkan keys secara menaik atau menurun, sesuai parameter Boolean ascending.\\ 
+13 & sortByKey([ascending], [numTasks]) & Saat dipanggil pada dataset dari pasangan (K,V) dimana K mengimplementasikan Ordered, mengembalikan dataset dari pasangan (K,V) terurut berdasarkan keys secara menaik atau menurun, sesuai parameter Boolean ascending.\\ 
 \hline
-14 & join(otherDataset, [numTasks]) & Saat dipanggil pada dataset dari tipe (K,V) dan (K,W), mengembalikan dataset dari pasangan (K,(V,W)) dengan semua pasangan dari elemen tiap key. Outer joins didukung dengan leftOuterJoin, rightOuterJoin, dan fullOuterJoin.\\ 
+14 & join(otherDataset,[numTasks]) & Saat dipanggil pada dataset dari tipe (K,V) dan (K,W), mengembalikan dataset dari pasangan (K,(V,W)) dengan semua pasangan dari elemen tiap key. Outer joins didukung dengan leftOuterJoin, rightOuterJoin, dan fullOuterJoin.\\ 
 \hline
-15 & cogroup(otherDataset,[numTasks]) & Saat dipanggil pada dataset dari tipe (K,V) dan (K,W), mengembalikan sebuah dataset dari tuple (K,Iterable<V>,Iterable<W>)). Operasi ini juga disebut 'group With'. \\ 
+15 & cogroup(otherDataset, [numTasks]) & Saat dipanggil pada dataset dari tipe (K,V) dan (K,W), mengembalikan sebuah dataset dari tuple (K,Iterable<V>,Iterable<W>)). Operasi ini juga disebut 'group With'. \\ 
 \hline
 16 & cartesian(otherDataset) & Saat dipanggil pada dataset dari tipe T dan U, mengembalikan sebuah dataset dari pasangan (T,U) (semua pasangan elemen)\\ 
 \hline
@@ -108,12 +99,16 @@ No. & Transformasi & Arti \\
 \hline
 19 & repartition(numPartitions) & Mengacak ulang data di dalam RDD secara acak untuk menciptakan antara lebih sedikit partisi dan menyeimbangkannya. Method ini selalu mengacak semua data di jaringan.\\ 
 \hline
-20 & repartitionAndSortWithinPartitions(partitioner) & Mempartisi ulang RDD berdasarkan partitioner yang diberikan dan, dalam setiap partisi yang dihasilkan, rekord diurutkan berdasarkan key. Hal ini lebih efisien daripada memanggil repartition dan kemudian menurutkannya pada setiap partisi. \\ 
+\end{tabular} 
+
+\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
+\hline
+20 & repartitionAndSortWithin Partitions(partitioner) & Mempartisi ulang RDD berdasarkan partitioner yang diberikan dan, dalam setiap partisi yang dihasilkan, rekord diurutkan berdasarkan key. Hal ini lebih efisien daripada memanggil repartition dan kemudian menurutkannya pada setiap partisi. \\ 
 \hline
 \end{tabular} 
 
 \subsubsection{Aksi RDD}
-RDD juga dapat melakukan berbagai operasi aksi. Berikut adalah operasi-operasi aksi yang dapat dilakukan oleh RDD.\\
+Selain transformasi, RDD juga dapat melakukan berbagai operasi aksi. Semua aksi RDD akan mengembalikan value bukan RDD. Berikut adalah operasi-operasi aksi yang dapat dilakukan oleh RDD.\\\\
 \begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
 \hline 
 No & Action & Arti \\ 
@@ -128,13 +123,17 @@ No & Action & Arti \\
 \hline 
 5 & take(n) & Mengembalikan sebuah array dengan n elemen pertama dari dataset \\ 
 \hline 
-6 & takeSample (withReplacement,num, [seed]) & Mengembalikan sebuah array dengan sampel acak dari banyak elemen dataset, dengan atau tidak replacement, menentukan random number generator seed secara optional. \\ 
+6 & takeSample (withReplacement, num, [seed]) & Mengembalikan sebuah array dengan sampel acak dari banyak elemen dataset, dengan atau tidak replacement, menentukan random number generator seed secara optional. \\ 
 \hline 
 7 & takeOrdered(n, [ordering]) & Mengembalikan n elemen pertama dari RDD mengunakan antara natural ordernya atau sebuah comparator buatan sendiri. \\ 
 \hline 
 8 & saveAsTextFile(path) & Menulis elemen dari dataset sebagai text file di dalam directory yang diberikan (pada parameter) di dalam file sistem lokal, dalam HDFS atau file sistem Hadoop yang lain. Spark memanggil toString pada setiap elemen untuk mengubah elemen dataset menjadi baris text di dalam file. \\ 
 \hline 
 9 & saveAsSequenceFile(path) & Menulis elemen dari dataset sebagai Hadoop SequenceFile di dalam path yang diberikan (pada parameter) dalam file sistem lokal, HDFS atau file sistem Hadoop yang lainnya. Aksi ini tersedia dalam pasangan key-value dari RDD yang mengimplementasikan Writable Interface milik Hadoop. Di Scala, aksi ini juga tersedia dalam tipe yang secara implisit dapat diubah ke Writable (Spark menyediakan konversi untuk tipe dasar seperti Int, Double, String, dll. \\ 
+\hline 
+\end{tabular}
+
+\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
 \hline 
 10 & saveAsObjectFile(path) & Menulis elemen dari dataset dalam format sederhana menggunakan serialisasi Java, dimana nantinya bisa dimuat menggunakan SparkContext.objectFile().\\ 
 \hline 
@@ -145,66 +144,41 @@ No & Action & Arti \\
 \end{tabular} 
 
 \subsection{Arsitektur Spark}
-Dalam spark, terdapat yang namanya master node dan juga worker node. Master node bertugas untuk memanajemen pembagian RDD dan juga pembagian tugas-tugas ke semua worker node yang ada. Master node memiliki sebuah driver program. Tugas dari driver program ini adalah untuk menjalankan aplikasi yang telah dibuat. Kode yang dibuat bertindak sebagai driver program atau jika menggunakan interactive shell, shell yang bertindak sebagai driver program. \\
-Di dalam driver program, hal pertama yang harus dilakukan adalah membuat Spark Context. Spark Context merupakan gerbang ke semua fungsi-fungsi milik spark. Semua fungsi yang akan dilakukan pada driver program akan melewati Spark Context. Driver program dan spark context bertugas menangani eksekusi pekerjaan di dalam sebuah cluster. Sebuah pekerjaan dibagi-bagi menjadi beberapa tugas-tugas kecil yang nantinya didistribusikan ke worker node. RDD juga dibuat di dalam spark context dan juga didistribusikan ke berbagai worker node. Kemudian RDD akan dicache di dalam worker node tersebut.\\
-Worker node adalah node pekerja yang pekerjaannya adalah pada dasarnya mengerjakan tugas-tugas yang diberikan kepadanya. Tugas-tugas tersebut dieksekusi di dalam node tersebut. Tugas tersebut adalah tugas di dalam RDD yang sudah dipartisi. Kemudian, worker node  akan mengembalikan hasilnya kembali ke Spark Context.\\
+Dalam spark, terdapat yang namanya master node dan juga worker node. Master node bertugas untuk memanajemen pembagian RDD dan juga pembagian tugas-tugas ke semua worker node yang ada. Master node memiliki sebuah driver program. Tugas dari driver program ini adalah untuk menjalankan aplikasi yang telah dibuat. Kode yang dibuat bertindak sebagai driver program atau jika menggunakan interactive shell, shell yang bertindak sebagai driver program.
+
+Di dalam driver program, hal pertama yang harus dilakukan adalah membuat Spark Context. Spark Context merupakan gerbang ke semua fungsi-fungsi milik spark. Semua fungsi yang akan dilakukan pada driver program akan melewati Spark Context. Driver program dan spark context bertugas menangani eksekusi pekerjaan di dalam sebuah cluster. Sebuah pekerjaan dibagi-bagi menjadi beberapa tugas-tugas kecil yang nantinya didistribusikan ke worker node. RDD juga dibuat di dalam spark context dan juga didistribusikan ke berbagai worker node. Kemudian RDD akan dicache di dalam worker node tersebut.
+
+Worker node adalah node pekerja yang pekerjaannya adalah pada dasarnya mengerjakan tugas-tugas yang diberikan kepadanya. Tugas-tugas tersebut dieksekusi di dalam node tersebut. Tugas tersebut adalah tugas di dalam RDD yang sudah dipartisi. Kemudian, worker node  akan mengembalikan hasilnya kembali ke Spark Context.
+
 Jadi secara garis besar, Spark Context mengambil pekerjaan, memecah pekerjaan dalam tugas-tugas/tasks dan mendistribusikannya ke worker node. Tugas-tugas tersebut bekerja pada RDD yang dipartisi, melakukan operasi, mengumpulkan hasil dan mengembalikannya ke Spark Context. 
-Jika node worker ditambah, maka pekerjaan akan menjadi lebih cepat selesai. Hal ini terjadi karena pekerjaan dapat dipecah ke lebih banyak partisi dan dapat mengeksekusi pekerjaan tersebut secara paralel dalam banyak sistem yang berbeda. Besar memori juga akan bertambah yang berefek pada meningkatnya kekuatan mencache pekerjaan.
-Oleh karena itu, pekerjaan dapat dieksekusi dengan lebih cepat.
+Jika node worker ditambah, maka pekerjaan akan menjadi lebih cepat selesai. Hal ini terjadi karena pekerjaan dapat dipecah ke lebih banyak partisi dan dapat mengeksekusi pekerjaan tersebut secara paralel dalam banyak sistem yang berbeda. Besar memori juga akan bertambah yang berefek pada meningkatnya kekuatan mencache pekerjaan. Oleh karena itu, pekerjaan dapat dieksekusi dengan lebih cepat.
 
 \section{Scala}
 \label{sec:scala}
+Scala atau singkatan dari Scalable Language adalah bahasa pemrograman yang berbasis Java Development Kit. Bahasa Scala menyediakan optimasi untuk kompleksitas kode dan concise notation (notasi singkat). Concise Notation artinya suatu kode memiliki banyak informasi dalam simbol atau tulisan yang sedikit yang hasilnya adalah kode yang pendek namun berbobot. Bahasa Scala juga kompatibel dengan bahasa Java. Oleh karena itu, Scala juga mendukung pemrograman berbasis objek (object-oriented) sama seperti Java. Selain itu, berkompatibel dengan Java juga memungkinkan Scala untuk menggunakan keuntungan dari Java Virtual Machine (JVM) dan juga menggunakan library dari Java. Oleh karena itu, bahasa Scala mirip dengan bahasa pemrograman Java yang digabungkan dengan bahasa pemrograman Python. Kemiripan dengan bahasa Java terletak pada inisialisasi kelas, library yang dipakai, adanya kelas main, mendukung object oriented, dan lain-lain. Sedangkan kemiripan dengan bahasa Python antara lain saat inisialisasi variabel, inisialisasi fungsi, tidak perlu semicolon(;) untuk pindah baris, dan definisi tipe data yang optional.
+Untuk lebih jelasnya, bahasa pemrograman Scala digunakan karena kelebihan-kelebihannya sebagai berikut ini:
 
-Mengapa menggunakan \LaTeX{} untuk buku skripsi dan apa keunggulan/kerugiannya bagi mahasiswa dan pembuat template. 
-
-Scala adalah bahasa pemrograman yang berbasis Java Development Kit. Bahasa Scala menyediakan optimasi untuk kompleksitas kode dan concise notation (notasi singkat). Concise Notation artinya suatu kode memiliki banyak informasi dalam simbol atau tulisan yang sedikit   yang hasilnya adalah kode yang pendek namun berbobot. Bahasa Scala juga kompatibel dengan bahasa Java. Oleh karena itu, Scala juga mendukung pemrograman berbasis objek (object-oriented) sama seperti Java. Selain itu, berkompatibel dengan Java juga memungkinkan Scala untuk menggunakan keuntungan dari Java Virtual Machine (JVM) dan juga menggunakan library dari Java.
-
-\subsection{Pemrograman Dasar Scala}
-Bahasa Scala mirip dengan bahasa pemrograman Java yang digabungkan dengan bahasa pemrograman Python. Kemiripan dengan bahasa Java terletak pada inisialisasi kelas, library yang dipakai, adanya kelas main, mendukung object oriented, dan lain-lain. Sedangkan kemiripan dengan bahasa Python antara lain saat inisialisasi variabel, inisialisasi fungsi, tidak perlu semicolon(;) untuk pindah baris, dan definisi tipe data saat membuat variabel atau kembalian fungsi itu opsional. Berikut adalah sintaks-sintaks dasar dalam bahasa Scala.\\
-\begin{tabular}{|p{0.05\textwidth}|p{0.3\textwidth}|p{0.55\textwidth}|}
-\hline 
-No & Kode & Fungsi \\ 
-\hline 
-1 & class NamaKelas(constructor:TipeData) \{ \ldots \} & Menginisialisasi kelas. Constructor dan TipeData opsional. \\ 
-\hline 
-2 & new NamaKelas() & Menginstansiasi kelas \\ 
-\hline 
-3 & val namavalue: TipeData & Menginisialisasi value (TipeData opsional). Value adalah atribut yang tidak dapat diubah (immutable). \\ 
-\hline 
-4 & var namavariabel: TipeData & Menginisialisasi variabel (TipeData opsional). Variabel adalah atribut yang dapat diubah (mutable). \\ 
-\hline 
-5 & def namadef(param: TipeData): TipeKembalian \{ \ldots \} & Menginisialisasi fungsi. Parameter, TipeData, dan TipeKembalian adalah opsional.  \\ 
-\hline 
-6 & object NamaObject \{ \ldots \} & Menginisialisasi objek \\ 
-\hline 
-7 & def main(args: Array[String]):Unit \{ \ldots \} & Meninisialisasi fungsi main \\ 
-\hline 
-8 & if(ekspresiboolean1) \{ \ldots \}else if(ekspresiboolean2) \{ \ldots \} else \{ \ldots \} & Branching \\ 
-\hline 
-9 & while(ekspresiboolean) \{ \ldots \} & Looping dengan while \\ 
-\hline 
-10 & for(i<-0 until max by inc) \{ \ldots \} & Looping dengan for dari 0 hingga max. inc adalah increment dari i. \\ 
-\hline 
-\end{tabular} 
+\begin{enumerate}
+\item 
+\item 
+\item 
+\end{enumerate}
 
 
-\section{Klasifikasi}
+\section{Teknik Klasifikasi di Spark MLlib}
 \label{sec:klasifikasi}
-Di dalam KBBI, klasifikasi adalah penyusunan bersistem dalam kelompok atau golongan menurut kaidah atau standar yang ditetapkan. Klasifikasi adalah pembagian sesuatu menurut kelas-kelas. Klasifikasi dilakukan untuk memprediksi suatu objek dengan atribut-atribut tertentu berada di dalam kelompok kelas yang mana. Cara klasifikasi ada bermacam-macam dan dengan akurasi yang bermacam-macam pula. Karena akurasi yang bermacam-macam, maka ada metode-metode yang tujuannya adalah meningkatkan akurasi dari klasifikasi. Salah satu caranya adalah dengan metode ensemble.
-
-Ensemble Method atau metode ensemble adalah algoritma dalam machine learning dimana algoritma ini adalah algoritma pencarian solusi prediksi terbaik dibandingkan dengan algoritma yang lain. Metode ensemble ini menggunakan beberapa algoritma pembelajaran untuk pencapaian solusi prediksi yang lebih baik daripada algoritma yang bisa diperoleh dari salah satu pembelajaran algoritma saja. Cara kerja dari metode ini adalah dengan memilih sebagian data dari data train secara acak dan membuat model dengan data train yang dipilih tersebut. Proses membuat model tersebut dilakukan berkali-kali dengan terus memilih data train secara acak. Biasanya proses tersebut dilakukan 500 sampai 1000 kali hingga terbentuk 500 hingga 1000 model klasifikasi. Kemudian, rekord yang ingin diklasifikasi dites disemua model. Proses ini menggunakan teknik bagging.
+Klasifikasi merupakan salah satu pembelajaran Machine Learning selain regresi dan clustering. Di dalam KBBI, klasifikasi adalah penyusunan bersistem dalam kelompok atau golongan menurut kaidah atau standar yang ditetapkan. Secara umum, klasifikasi adalah proses pembagian data menurut label kelas-kelas tertentu. Klasifikasi menyelesaikan permasalahan prediksi label kelas yang sifatnya diskret berbeda dengan proses regresi yang memprediksi label yang sifatnya kontinu. Teknik klasifikasi ada bermacam-macam dan dengan akurasi yang bermacam-macam pula. Dalam Spark, terdapat Spark Machine Learning Library yang sudah menyediakan pembelajaran Machine Learning secara terdistribusi. Teknik klasifikasi yang ada dalam Spark MLLib ada 5 yakni Logistic Regression, Decision Tree, Naive Bayes, Random Forest, dan juga Gradient Boosted Tree.
+\begin{enumerate}
+\item Logistic Regression
+\item Decision Tree
+\item Naive Bayes
+\item Random Forest
+\item Gradient Boosted Tree
+\end{enumerate}
+Algoritma-algoritma tersebut masih perlu dikembangkan agar dapat menangani pembuatan model klasifikasi secara inkremental. Salah satu cara untuk mengembangkan algoritma klasifikasi secara inkremental adalah dengan menggunakan Ensemble Method. Ensemble Method atau metode ensemble adalah algoritma dalam machine learning dimana algoritma ini adalah algoritma pencarian solusi prediksi terbaik dibandingkan dengan algoritma yang lain. Metode ensemble ini menggunakan beberapa algoritma pembelajaran untuk pencapaian solusi prediksi yang lebih baik daripada algoritma yang bisa diperoleh dari salah satu pembelajaran algoritma saja. Cara kerja dari metode ini adalah dengan memilih sebagian data dari data train secara acak dan membuat model dengan data train yang dipilih tersebut. Proses membuat model tersebut dilakukan berkali-kali dengan terus memilih data train secara acak. Biasanya proses tersebut dilakukan 500 sampai 1000 kali hingga terbentuk 500 hingga 1000 model klasifikasi. Kemudian, rekord yang ingin diklasifikasi dites disemua model. Proses ini menggunakan teknik bagging.
 
 Bootstrap Aggregating atau bagging merupakan metode yang dapat memperbaiki hasil dari algoritma klasifikasi machine learning dengan menggabungkan klasifikasi prediksi dari beberapa model. Hasil klasifikasi dari beberapa model tersebut kemudian dihitung secara voting. Hasil voting kelas terbanyak akan menjadi label dari rekord yang ingin diprediksi. Tujuan dari penggabungan hasil prediksi dari beberapa model adalah untuk mengatasi ketidakstabilan pada model yang kompleks. Bagging adalah salah satu algoritma berbasis ensemble yang paling awal dan paling sederhana, namun efektif. 
  
- 
-\subsection{Teknik Klasifikasi di Spark MLlib}
-Akan dipaparkan bagaimana menggunakan template ini, termasuk petunjuk singkat membuat referensi, gambar dan tabel.
-Juga hal-hal lain yang belum terpikir sampai saat ini. 
-Ada banyak algoritma untuk mengimplementasikan proses klasifikasi. Diantara banyak algoritma tersebut, algortma yang terdapat pada Spark Machine Learning Library hanya ada 5 dan 2 diantaranya sudah mengaplikasikan metode ensemble dari 1 algoritma dasar yakni decision tree dengan metode ensemblenya yakni random forest dan gradient boosted tree. Hal ini meninggalkan hanya 2 algoritma yang dapat dipilih untuk diaplikasikan metode ensemble yakni algoritma logistic regression dan naive bayes.
- 
-\subsubsection{Logistic Regression}
-\subsubsection{Decision Tree}
-\subsubsection{Naive Bayes}
-\subsubsection{Random Forest}
-\subsubsection{Gradient Boosted Tree}
+
+\subsection{Source Code Algoritma Klasifikasi}
  
